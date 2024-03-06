@@ -32,7 +32,7 @@
         <section class="wrapper">
             <aside>
                 <fieldset>
-                    <legend>Select Available Pals</legend>
+                    <legend>Select Pals</legend>
                     <div v-for="(value, k) in pals" >
                         <label >
                             <input type="checkbox" :name="k" @click="setFilter(k)" :checked="available.includes(k)" />
