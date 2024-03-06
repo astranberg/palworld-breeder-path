@@ -30,7 +30,7 @@ var app = new Vue({
         .then(d => {
             this.pals = d
             this.target = Object.keys(d)[2]
-            this.available = ["Relaxaurus", "Woolipop", "Mozzarina"]
+            this.available = ["Woolipop", "Mozzarina"]
             this.checkLocalStorage()
         })
     },
