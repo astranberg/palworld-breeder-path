@@ -57,23 +57,25 @@ function getMermaidNotation(p1, p2, c, available){
     return `${p1}${class1}-->${c};\r\n\t${p2}${class2}-->${c};\r\n\t`
 }
 
-function extractBreedPath(breeds, available, target, maxIteration){
+function extractBreedPath(breeds, available, target, maxIteration, requiredPals){
     let o = breeds.filter(e => e.includes(">" + target + ";"))
     let satisfiedReqs = []
     let requires = o.map(e => e.split("-->")[0])
+    
     for(let i = 0; i <= maxIteration; i++){
         requires.forEach(r => {
             o = [...o, ...breeds.filter(e => e.includes(">" + r +";"))]
         })
         satisfiedReqs = [...satisfiedReqs, ...requires]
         requires = o.map(e => e.split("\r\n\t").map(e2 => e2.split("-->")[0])).flat().filter(e => e != "")
-        requires = requires.filter(e => !available.includes(e) && !satisfiedReqs.includes(e))
+        requires = requires.filter(e => !available.includes(e) && !satisfiedReqs.includes(e) && !requiredPals.includes(e))
     }
     return o
 }
 
 function deepBreed(target, available, maxIteration){
     let storage = JSON.parse(JSON.stringify(available))
+    let requiredPals = JSON.parse(JSON.stringify(available))
     let breeds = []
 
     for(let i = 0; i <= maxIteration; i++){
@@ -92,7 +94,7 @@ function deepBreed(target, available, maxIteration){
     
     let finalBreeds = []
     if(storage.includes(target)){
-        finalBreeds = extractBreedPath(breeds, available, target, maxIteration)
+        finalBreeds = extractBreedPath(breeds, available, target, maxIteration, requiredPals)
     }
 
     return {
