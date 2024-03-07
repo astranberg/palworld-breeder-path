@@ -61,24 +61,16 @@ function extractBreedPath(breeds, available, target, maxIteration, requiredParen
     let o = breeds.filter(e => e.includes(">" + target + ";"))
     let satisfiedReqs = []
     let requires = o.map(e => e.split("-->")[0])
-    
     for(let i = 0; i <= maxIteration; i++){
         requires.forEach(r => {
             o = [...o, ...breeds.filter(e => e.includes(">" + r +";"))]
         })
         satisfiedReqs = [...satisfiedReqs, ...requires]
         requires = o.map(e => e.split("\r\n\t").map(e2 => e2.split("-->")[0])).flat().filter(e => e != "")
-        requires = requires.filter(e => !available.includes(e))
+        requires = requires.filter(e => !available.includes(e) && !satisfiedReqs.includes(e))
     }
     // Filter breeding paths that don't contain all selected parents
-    o = o.filter(path => {
-        for (let parent of requiredParents) {
-            if (!path.includes(parent)) {
-                return false;
-            }
-        }
-        return true;
-    });
+    // WIP
     return o
 }
 
