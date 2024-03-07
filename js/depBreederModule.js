@@ -57,7 +57,7 @@ function getMermaidNotation(p1, p2, c, available){
     return `${p1}${class1}-->${c};\r\n\t${p2}${class2}-->${c};\r\n\t`
 }
 
-function extractBreedPath(breeds, available, target, maxIteration, requiredPals){
+function extractBreedPath(breeds, available, target, maxIteration, requiredParents){
     let o = breeds.filter(e => e.includes(">" + target + ";"))
     let satisfiedReqs = []
     let requires = o.map(e => e.split("-->")[0])
@@ -68,8 +68,17 @@ function extractBreedPath(breeds, available, target, maxIteration, requiredPals)
         })
         satisfiedReqs = [...satisfiedReqs, ...requires]
         requires = o.map(e => e.split("\r\n\t").map(e2 => e2.split("-->")[0])).flat().filter(e => e != "")
-        requires = requires.filter(e => !available.includes(e) && !satisfiedReqs.includes(e) && !requiredPals.includes(e))
+        requires = requires.filter(e => !available.includes(e))
     }
+    // Filter breeding paths that don't contain all selected parents
+    o = o.filter(path => {
+        for (let parent of requiredParents) {
+            if (!path.includes(parent)) {
+                return false;
+            }
+        }
+        return true;
+    });
     return o
 }
 
